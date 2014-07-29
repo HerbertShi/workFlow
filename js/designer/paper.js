@@ -18,6 +18,16 @@ define(["jquery", "raphael", "config", "toolBox", "node"],
 							}
 						});
 
+					$(document).keydown(function(e){
+						if (e.keyCode == 46) {
+							var currentObject = $(paper).data("currentObject");
+							if (currentObject != null) {
+								$(paper).data("currentObject").remove();
+								$(paper).data("currentObject",null);
+							}
+						}
+					});
+
 					$(paper).data("nodes",[]);
 				}
 				clickPaper = function(x,y){

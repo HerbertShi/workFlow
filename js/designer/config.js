@@ -6,7 +6,7 @@ define(function() {
 			"tools": [{
 				"image": "images/48/flow_sequence.png",
 				"type": "next",
-				"lineType": "black",
+				"lineType": "#808080",
 				"text": "黑色线"
 			}, {
 				"image": "images/48/flow_sequence.png",
@@ -81,7 +81,8 @@ define(function() {
 					"cursor": 'move'
 				},
 				"lines":[{
-					"type":"off"
+					"state":"break",
+					"lineType":"#808080"
 				}]
 			},
 			"end": {
@@ -113,9 +114,7 @@ define(function() {
 						"font-familly": "Microsoft YaHei",
 					}
 				},
-				"lines":[{
-					"type":"0"
-				}]
+				"lines":[]
 			},
 			"couple": {
 				"type": "text",
@@ -186,7 +185,25 @@ define(function() {
 				"fill": "#000",
 				"cursor": "move",
 				"stroke-width": 1
-			} //"cursor":"s-resize"
+			}//"cursor":"s-resize"
+		},
+		"line": {
+			"state": "break",
+			"lineType":"#808080",
+			"path": {
+				// "stroke": "#808080",
+				"fill": "none",
+				"stroke-width": 2
+			},
+			"arrow": {
+				// "stroke": "#808080",
+				// "fill": "#808080",
+				"stroke-width": 2,
+				"radius": 4
+			}
+		}
+		getId:function(type){
+			return type + (new Date()).getTime();
 		}
 	};
 	return config;

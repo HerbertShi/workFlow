@@ -1,5 +1,5 @@
-define(["jquery", "raphael", "config"],
-	function($, Raphael, Config) {
+define(["jquery", "raphael", "config","line"],
+	function($, Raphael, Config,Line) {
 		return function(paper, nodeType, opt) {
 			var options = $.extend(true, {}, Config.node[nodeType], opt),
 				node = this,
@@ -13,7 +13,6 @@ define(["jquery", "raphael", "config"],
 						group.push(text);
 					}
 					group.push(rect);
-					darwBorder();
 					group.drag(function(dx, dy) {
 						moveResize(dx, dy);
 					}, function() {
@@ -26,10 +25,12 @@ define(["jquery", "raphael", "config"],
 						node.focus();
 					});
 
+					drawBorder();
+					drawDefaultLine();
 					node.focus();
 				},
 				//画边框
-				darwBorder = function() {
+				drawBorder = function() {
 					border = paper.path(getBorderPath(options.attr.x, options.attr.y, options.attr.width, options.attr.height, Config.border.margin)).attr(Config.border.attr);
 
 					var rPoint = getResizePoint(options.attr.x, options.attr.y, options.attr.width, options.attr.height, Config.border.margin);
@@ -39,61 +40,61 @@ define(["jquery", "raphael", "config"],
 				},
 				//根据原图形的x,y,width,height以及边距返回边框路径字符串
 				getBorderPath = function(x, y, width, height, margin) {
-					var leftTopPoint = {
+					var leftTop = {
 							"x": x - margin,
 							"y": y - margin
 						},
-						rightTopPoint = {
+						rightTop = {
 							"x": x + width + margin,
 							"y": y - margin
 						},
-						rightBottomPoint = {
+						rightBottom = {
 							"x": x + width + margin,
 							"y": y + height + margin
 						},
-						leftBottomPoint = {
+						leftBottom = {
 							"x": x - margin,
 							"y": y + height + margin
 						}
 					var result = [];
-					result.push("M" + leftTopPoint.x + " " + leftTopPoint.y);
-					result.push("L" + rightTopPoint.x + " " + rightTopPoint.y);
-					result.push("L" + rightBottomPoint.x + " " + rightBottomPoint.y);
-					result.push("L" + leftBottomPoint.x + " " + leftBottomPoint.y + "Z");
+					result.push("M" + leftTop.x + " " + leftTop.y);
+					result.push("L" + rightTop.x + " " + rightTop.y);
+					result.push("L" + rightBottom.x + " " + rightBottom.y);
+					result.push("L" + leftBottom.x + " " + leftBottom.y + "Z");
 					return result.join("");
 				},
 				//根据原图形的x,y,width,height以及边距返回 resizePoint坐标集合
 				getResizePoint = function(x, y, width, height, margin) {
 					var result = {
-						leftTopPoint: {
+						leftTop: {
 							"x": x - margin - Config.resizePoint.attr.width / 2,
 							"y": y - margin - Config.resizePoint.attr.height / 2
 						},
-						rightTopPoint: {
+						rightTop: {
 							"x": x + width + margin - Config.resizePoint.attr.width / 2,
 							"y": y - margin - Config.resizePoint.attr.height / 2
 						},
-						rightBottomPoint: {
+						rightBottom: {
 							"x": x + width + margin - Config.resizePoint.attr.width / 2,
 							"y": y + height + margin - Config.resizePoint.attr.height / 2
 						},
-						leftBottomPoint: {
+						leftBottom: {
 							"x": x - margin - Config.resizePoint.attr.width / 2,
 							"y": y + height + margin - Config.resizePoint.attr.height / 2
 						},
-						middleTopPoint: {
+						middleTop: {
 							"x": x + width / 2 - Config.resizePoint.attr.width / 2,
 							"y": y - margin - Config.resizePoint.attr.height / 2
 						},
-						middleBottomPoint: {
+						middleBottom: {
 							"x": x + width / 2 - Config.resizePoint.attr.width / 2,
 							"y": y + height + margin - Config.resizePoint.attr.height / 2
 						},
-						leftMiddlePoint: {
+						leftMiddle: {
 							"x": x - margin - Config.resizePoint.attr.width / 2,
 							"y": y + height / 2 - Config.resizePoint.attr.height / 2
 						},
-						rightMiddlePoint: {
+						rightMiddle: {
 							"x": x + width + margin - Config.resizePoint.attr.width / 2,
 							"y": y + height / 2 - Config.resizePoint.attr.height / 2
 						}
@@ -126,7 +127,7 @@ define(["jquery", "raphael", "config"],
 						resizePoint[r].attr(rPoint[r]);
 					}
 				},
-				//拖动开始
+				//拖动开始前
 				beforeMove = function(){
 					group.attr({
 						opacity: 0.5
@@ -135,6 +136,14 @@ define(["jquery", "raphael", "config"],
 					$(rect).data({
 						"startX":rect.attr("x"),
 						"startY":rect.attr("y")
+					});
+				},
+				//绘制默认的线
+				drawDefaultLine = function(){
+					$(node).data("lines",[]);
+					$(options.line).map(function(){
+						var line = new Line(paper,node,this);
+						$(node).data("lines").push(line);
 					});
 				};
 
@@ -155,7 +164,26 @@ define(["jquery", "raphael", "config"],
 				for(var r in resizePoint){
 					resizePoint[r].hide();
 				}
+				$(paper).data("currentObject",null);
 			};
+
+			this.remove = function(){
+				var result = $($(paper).data("nodes")).map(function(){
+					if(this.id != node.id){
+						return this;
+					}
+				});
+				$(paper).data("nodes",result);
+
+				group.remove();
+				border.remove();
+				for (var r in resizePoint) {
+					resizePoint[r].remove();
+				}
+			};
+
+			this.isLine = false;
+			this.id = options.id || Config.getId("node");
 
 			init();
 			return this;

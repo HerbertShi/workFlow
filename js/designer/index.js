@@ -7,7 +7,8 @@ requirejs.config({
         'paper': '../designer/paper',
         'toolBox': '../designer/toolBox',
         'config': '../designer/config',
-        'node': '../designer/node'
+        'node': '../designer/node',
+        'line':'../designer/line'
     },
 
     shim: {
