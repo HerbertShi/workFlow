@@ -201,7 +201,7 @@ define(function() {
 				"stroke-width": 2,
 				"radius": 4
 			}
-		}
+		},
 		getId:function(type){
 			return type + (new Date()).getTime();
 		}

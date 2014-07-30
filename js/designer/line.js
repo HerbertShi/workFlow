@@ -11,7 +11,7 @@ define(["jquery", "raphael", "config"],
                     }
                 },
                 drawBreakLine = function(){
-                    var startPoint = 
+                    //var startPoint = 
                 };
 
             this.isLine = true;
