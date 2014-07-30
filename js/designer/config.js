@@ -81,8 +81,7 @@ define(function() {
 					"cursor": 'move'
 				},
 				"lines":[{
-					"state":"break",
-					"lineType":"#808080"
+					"state":"break"
 				}]
 			},
 			"end": {
@@ -114,7 +113,9 @@ define(function() {
 						"font-familly": "Microsoft YaHei",
 					}
 				},
-				"lines":[]
+				"lines":[{
+					"state":"break"
+				}]
 			},
 			"couple": {
 				"type": "text",
@@ -135,7 +136,11 @@ define(function() {
 						"font-familly": "Microsoft YaHei",
 					}
 				},
-				"lines":[]
+				"lines":[{
+					"state":"break"
+				},{
+					"state":"break"
+				}]
 			},
 			"many": {
 				"type": "text",
@@ -156,7 +161,13 @@ define(function() {
 						"font-familly": "Microsoft YaHei",
 					}
 				},
-				"lines":[]
+				"lines":[{
+					"state":"break"
+				},{
+					"state":"break"
+				},{
+					"state":"break"
+				}]
 			},
 			"auto": {
 				"type": "image",
@@ -189,15 +200,12 @@ define(function() {
 		},
 		"line": {
 			"state": "break",
-			"lineType":"#808080",
+			"lineType":"black",
 			"path": {
-				// "stroke": "#808080",
 				"fill": "none",
 				"stroke-width": 2
 			},
 			"arrow": {
-				// "stroke": "#808080",
-				// "fill": "#808080",
 				"stroke-width": 2,
 				"radius": 4
 			}
